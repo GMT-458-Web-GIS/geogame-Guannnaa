@@ -9,6 +9,7 @@ It includes difficulty levels, time-based progression, scoring, lives, and optio
 The game is implemented entirely in HTML, CSS, JavaScript, with Leaflet.js for mapping, Turf.js for spatial validation, and optional Chart.js for graphical summaries.
 
 Requirements:
+
 ✔ Functional Requirements
 
 The game uses a map of Turkey as the play area.
@@ -38,6 +39,7 @@ GeoJSON + Turf.js used for accurate province boundary checks (point-in-polygon).
 HTML
 
 CSS
+
 Vanilla JavaScript 
 
 Leaflet.js 
