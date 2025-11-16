@@ -106,10 +106,11 @@ Player(s) can save their score to the leaderboard.
 
 Number of Questions:
 GeoKahoot uses a time-based design, meaning:
+
 👉 The number of questions depends on how many the player can answer within the time limit.
-Optionally, a fixed-question mode (e.g., 20 questions) may be added later.
 
 Life System
+
 Easy	3	Very Easy	Larger tolerance (60 km if not using GeoJSON)
 
 Normal	3	Standard	Moderate tolerance (40 km)
