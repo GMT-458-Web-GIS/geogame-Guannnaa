@@ -1,0 +1,81 @@
+:root{
+  --bg:#f6f8fb; --card:#fff; --accent:#2563eb; --muted:#666;
+}
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;}
+html,body{height:100%;margin:0;background:var(--bg);color:#111}
+.page{display:flex;height:100vh;align-items:flex-start;justify-content:center;padding:20px}
+.card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(12,18,30,0.06);width:420px}
+.card.small{width:300px;margin-top:12px}
+#setupPage .card{width:520px; max-width:92%;}
+#setupPage{
+  /* Use the provided giriş.jpg as the setup page background (scaled down so it fits) */
+  position:relative;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background-image: url("giriş.jpg");
+  /* scale the image smaller so it's fully visible; no-repeat so card area stays clean */
+  background-size: 70% auto;
+  background-repeat: no-repeat;
+  background-position: center top;
+}
+#setupPage .setup-header{ text-align:center; margin-bottom:6px }
+#setupPage h1{ font-size:28px; margin:6px 0 4px; letter-spacing:0.5px }
+#setupPage .subtitle{ color:rgba(0,0,0,0.6); margin:0 0 12px; font-size:13px }
+
+/* nicer card look for setup */
+#setupPage .card{ padding:22px; border-radius:14px; box-shadow:0 12px 30px rgba(8,12,24,0.18); }
+#setupPage label{ font-size:15px }
+#playerNames .player-input{ margin-bottom:8px }
+
+/* Buttons */
+button.primary{ background:linear-gradient(90deg,var(--accent),#1e6fe0); padding:10px 14px; font-weight:700 }
+button.ghost{ background:transparent; color:var(--accent); border:1px solid rgba(37,99,235,0.12); padding:8px 10px }
+.row.actions{ display:flex; align-items:center; gap:12px; margin-top:16px }
+.secondaryGroup{ display:flex; gap:8px; align-items:center }
+
+/* inputs */
+input[type="number"], select, input[type="text"]{ padding:8px 10px; border-radius:8px; border:1px solid #e6e9ef }
+
+/* dark overlay to keep text readable */
+#setupPage::before{
+  content: "";
+  position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35));
+  z-index:0;border-radius:0;
+}
+#setupPage .card{position:relative;z-index:1;background:rgba(255,255,255,0.94)}
+#setupPage label{display:block;margin:10px 0;font-size:15px}
+.row{display:flex;gap:8px;margin-top:12px}
+button{background:var(--accent);color:#fff;padding:8px 10px;border:0;border-radius:8px;cursor:pointer}
+button[disabled]{opacity:0.5;cursor:not-allowed}
+.muted{color:var(--muted);font-size:13px;margin-top:8px}
+
+#gamePage{align-items:stretch;justify-content:flex-start}
+#gamePage{
+  /* background for the main game area (use mor.jpg) */
+  position:relative;
+  background-image: url("mor.jpg");
+  background-size: cover;
+  background-position: center center;
+}
+/* Rules modal styles removed — using a separate rules.html page now */
+/* subtle dark overlay for readability */
+#gamePage::before{
+  content:""; position:absolute; inset:0; background:linear-gradient(rgba(0,0,0,0.22), rgba(0,0,0,0.22)); z-index:0;
+}
+/* ensure children sit above the overlay */
+#gamePage > *{position:relative; z-index:1}
+#sidebar{width:360px;padding-right:12px}
+#mapWrap{flex:1;display:flex;align-items:stretch}
+#map{flex:1;height:calc(100vh - 40px);border-radius:10px;overflow:hidden;box-shadow:0 6px 18px rgba(12,18,30,0.06)}
+.stats{display:flex;gap:12px;font-weight:700;margin:8px 0}
+#hintBox{background:#f3f6fb;padding:10px;border-radius:8px}
+#hintText{min-height:44px;display:flex;align-items:center}
+#eventsBox{margin-top:10px}
+#events{list-style:none;padding:0;margin:0;max-height:160px;overflow:auto}
+#events li{padding:6px 8px;border-bottom:1px solid #eee;font-size:13px}
+.leader-form{display:flex;gap:8px;margin-top:8px}
+.leader-form input{flex:1;padding:8px;border-radius:6px;border:1px solid #e6e9ef}
+ol#leaders{padding-left:18px;margin:6px 0}
+#endActions .muted{margin-top:6px}

@@ -1,125 +1,54 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/BhShQpq1)
-                                                     GeoKahoot (Turkey City Guessing Geo-Game)
-                                                     
- Project Description:
- 
-GeoKahoot is an interactive, map-based geo-game where players attempt to guess Turkish provinces based on given hints.
-The game supports both single-player and two-player sequential multiplayer modes.
-It includes difficulty levels, time-based progression, scoring, lives, and optional analytical visualizations.
-The game is implemented entirely in HTML, CSS, JavaScript, with Leaflet.js for mapping, Turf.js for spatial validation, and optional Chart.js for graphical summaries.
+# GeoKahoot (Turkey) — README
 
-Requirements:
+This small web game asks players to find Turkish provinces on a Leaflet map.
 
-✔ Functional Requirements
+Two game modes:
+- `Easy`: the hint shows the province plate number (e.g. `34` for İstanbul); the player clicks the map near the province. Points are awarded by distance.
+- `Hard`: the hint shows a short cultural / encyclopedic text about the province; the player must click near the right province. Cultural hints come from `data/cultural_questions.json` (see below).
 
-The game uses a map of Turkey as the play area.
+Files you may want to know about
+- `index.html` — main page and UI.
+- `script.js` — game logic and map interactions.
+- `style.css` — basic styling.
+- `data/cultural_questions_sample.json` — small sample of cultural hints used as a fallback.
+- `scripts/fetch_cultural_questions.py` — helper that fetches Turkish Wikipedia summaries and builds `data/cultural_questions.json`.
 
-Each round shows a random province and provides a hint.
+How to run locally (Windows PowerShell)
+1. (Optional) Populate full cultural question set from Turkish Wikipedia. From the project folder run:
 
-The player clicks on the map to make a guess.
+```powershell
+python .\scripts\fetch_cultural_questions.py
+```
 
-Supports three difficulty levels: Easy, Normal, Hard.
+This will create `data/cultural_questions.json` with Wikipedia summary text for each province. The script is polite (adds a short delay between requests). Internet access is required.
 
-Time-based gameplay: e.g., each player has 60 seconds.
+2. Start a simple static server so `fetch()` and assets work correctly. From the project root run:
 
-Life system (depends on difficulty).
+```powershell
+python -m http.server 8000
+```
 
-Multiplayer mode:
+3. Open the game in your browser:
 
-Player 1 plays first
+```
+http://localhost:8000/
+```
 
-Player 2 plays under the same conditions
+Usage notes
+- The app no longer depends on a GeoJSON file. It uses `plateCentroids` fallback coordinates when a GeoJSON isn't provided.
+- If `data/cultural_questions.json` exists, Hard mode will use that file. Otherwise the app falls back to `data/cultural_questions_sample.json`.
+- If you want to customize or extend the cultural hints, edit or replace `data/cultural_questions.json` (JSON object with province names as keys and short hint strings as values).
 
-Highest score wins
+Troubleshooting
+- If you see CORS or `fetch` errors while loading the questions, ensure you started the local static server and you opened the game via `http://localhost:8000` and not `file://`.
+- If the fetcher script fails, it will print per-province errors; you can re-run it later. The script uses the Turkish Wikipedia REST summary API and may be blocked if run too frequently.
 
-GeoJSON + Turf.js used for accurate province boundary checks (point-in-polygon).
+Want me to do the fetch for you?
+- I cannot run network requests from here, but I prepared `scripts/fetch_cultural_questions.py` so you can run it locally with a single command above. If you want, I can tweak the script to fetch different lengths or to store the Wikipedia URL alongside each hint.
 
-✔ Technical Requirements
+If you'd like, I can also:
+- Increase the number of sample hints in `data/cultural_questions_sample.json`.
+- Add UI text that credits the source (e.g., "Source: Wikipedia (tr)").
+- Make Hard mode require a smaller distance threshold (harder scoring).
 
-HTML
-
-CSS
-
-Vanilla JavaScript 
-
-Leaflet.js 
-
-Turf.js 
-
-Chart.js 
-
-
-Frontend Design & Layout
-<img width="957" height="521" alt="image" src="https://github.com/user-attachments/assets/b499611d-0a10-4d10-a072-94754664643f" />
-<img width="930" height="491" alt="image" src="https://github.com/user-attachments/assets/3c0dd723-690b-46b7-b9a8-d48f7abd9c41" />
-<img width="659" height="306" alt="image" src="https://github.com/user-attachments/assets/23c6381b-2b37-4094-b206-43330a711e6e" />
-
-How Will the Game Progress:
-
-🎯 Start Phase
-
-Players enter their names.
-
-A difficulty level is selected.
-
-A time limit (e.g., 60 seconds) is entered.
-
-If multiplayer is enabled, the game runs sequentially: Player 1 → Player 2.
-
-🎯 Gameplay Flow
-
-A random province is selected.
-
-A random hint type is shown:
-
-License plate number
-
-Neighboring provinces
-
-Geographic region
-
-Famous place/food
-
-Short descriptive clue
-
-The player clicks on the map to guess.
-
-GeoJSON + Turf.js validate the click:
-
-✔ If the clicked point lies inside the province polygon → correct
-
-Correct answers give points (base + combo + time bonus).
-
-Incorrect answers reduce lives.
-
-The player's turn ends when the timer reaches zero or lives reach zero.
-
-In multiplayer, Player 2 starts immediately after Player 1 finishes.
-
-🎯 End Phase
-
-Scores are compared.
-
-A winner is displayed.
-
-Player(s) can save their score to the leaderboard.
-
-Number of Questions:
-
-GeoKahoot uses a time-based design, meaning
- The number of questions depends on how many the player can answer within the time limit.
-
-Life System:
-
-Easy	3	Very Easy	Larger tolerance (60 km if not using GeoJSON)
-
-Normal	3	Standard	Moderate tolerance (40 km)
-
-Hard	2	Hard	Strict: any click outside the boundary is wrong
-
-
-
-
-
-
-
+Enjoy — tell me which next tweak you prefer.

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>GeoKahoot — Turkey City Guessing</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- SETUP PAGE -->
+  <div id="setupPage" class="page">
+    <div class="card">
+      <div class="setup-header">
+        <h1>GeoKahoot</h1>
+        <p class="subtitle">Find Turkish provinces on the map — play solo or with friends.</p>
+      </div>
+
+      <label>Number of players:
+        <select id="playerCount">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label>
+
+      <div id="playerNames"></div>
+
+      <label>Difficulty:
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="hard" selected>Hard</option>
+        </select>
+      </label>
+
+      <label>Time per player (seconds):
+        <input id="timePerPlayer" type="number" min="10" max="300" value="60">
+      </label>
+
+      <div class="row actions">
+        <button id="startBtn" class="primary">Start Game</button>
+        <div class="secondaryGroup">
+          <button id="rulesBtn" class="ghost">Kurallar</button>
+        </div>
+      </div>
+
+      <small class="muted">Put your GeoJSON at <code>geojson/turkiye.geojson</code> or select file with Load geojson.</small>
+    </div>
+  </div>
+
+  <!-- GAME PAGE -->
+  <div id="gamePage" class="page" style="display:none;">
+    <div id="sidebar">
+      <div class="card">
+        <h2 id="turnTitle">Turn</h2>
+
+        <div class="stats">
+          <div>Timer: <span id="timer">0</span>s</div>
+          <div>Score: <span id="score">0</span></div>
+          <div>Lives: <span id="lives">0</span></div>
+        </div>
+
+        <div id="hintBox">
+          <h4>Hint</h4>
+          <div id="hintText">Waiting...</div>
+        </div>
+
+        <div class="controls">
+          <button id="skipBtn" disabled>Skip (-2)</button>
+          <button id="finishTurnBtn" disabled>Finish Turn</button>
+        </div>
+
+        <div id="eventsBox">
+          <h4>Events</h4>
+          <ul id="events"></ul>
+        </div>
+
+        <div id="endActions" style="display:none">
+          <h4>Match Result</h4>
+          <div id="resultText"></div>
+          <div class="leader-form">
+            <input id="saveName" placeholder="Name to save score">
+            <button id="saveScoreBtn">Save Score</button>
+            <button id="restartBtn">Restart All</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card small">
+        <h4>Leaderboard</h4>
+        <ol id="leaders"></ol>
+      </div>
+    </div>
+
+    <div id="mapWrap">
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <!-- Winner overlay shown at match end -->
+  <div id="winnerOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:99999; align-items:center; justify-content:center;">
+    <div style="background:#fff; padding:20px; border-radius:8px; width:320px; text-align:center;">
+      <h2 id="winnerTitle">Winner</h2>
+      <p id="winnerText" style="font-size:18px; margin:12px 0">Player — 0 pts</p>
+      <div style="display:flex; gap:8px; justify-content:center;">
+        <button id="overlayRestartBtn">Restart</button>
+        <button id="overlayCloseBtn">Close</button>
+      </div>
+    </div>
+
+    <!-- rules page moved to separate rules.html -->
+  </div>
+
+  <!-- libs -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
+  <!-- main script -->
+  <script src="script.js"></script>
+</body>
+</html>
+
