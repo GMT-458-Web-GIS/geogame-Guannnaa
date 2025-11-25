@@ -124,7 +124,7 @@ function updatePlayerInputs(){
   for(let i=1;i<=count;i++){
     const wrap = document.createElement('div');
     wrap.className = 'player-input';
-    wrap.innerHTML = `<label>Player ${i} Name: <input id="player${i}Name" placeholder="Player ${i}"/></label>`;
+    wrap.innerHTML = `<label>Oyuncu ${i} Adı: <input id="player${i}Name" placeholder="Oyuncu ${i}"/></label>`;
     div.appendChild(wrap);
   }
 }
@@ -144,7 +144,7 @@ function startFromSetup(){
   players = [];
   const count = parseInt(el('playerCount').value);
   for(let i=1;i<=count;i++){
-    const name = (document.getElementById(`player${i}Name`)?.value || `Player ${i}`).trim() || `Player ${i}`;
+    const name = (document.getElementById(`player${i}Name`)?.value || `Oyuncu ${i}`).trim() || `Oyuncu ${i}`;
     players.push({name, score:0, time:0});
   }
   mode = el('difficulty').value;
@@ -183,11 +183,11 @@ function tryLoadDefaultGeoJSON(){
         if(!resp.ok) throw new Error('not found');
         const gj = await resp.json();
         handleLoadedGeoJSON(gj);
-        evtLog('GeoJSON loaded from: '+url);
+        evtLog('GeoJSON yüklendi: '+url);
         return;
       } catch(e){}
     }
-    evtLog('No default GeoJSON found; falling back to centroid distance checks.');
+    evtLog('Varsayılan GeoJSON bulunamadı; merkez noktası uzaklık kontrolleri kullanılıyor.');
   })();
 }
 
@@ -208,7 +208,7 @@ function handleLoadedGeoJSON(gj){
       if(cname) allProvinceNames.push(cname);
     });
   }
-  if(allProvinceNames.length>0) evtLog('Found '+allProvinceNames.length+' provinces in GeoJSON.');
+  if(allProvinceNames.length>0) evtLog(allProvinceNames.length+' il GeoJSON\'da bulundu.');
   // fit bounds
   try { map.fitBounds(provincesLayer.getBounds(), {padding:[20,20]}); } catch(e){}
 }
@@ -278,19 +278,19 @@ function makeHintForProvince(name){
       const neighbors = feature.properties?.NEIGH || '';
       // build a few hints
       const hints = [];
-      if(plate) hints.push(`Plate number: ${plate}`);
-      if(region) hints.push(`Region: ${region}`);
-      if(famous) hints.push(`Famous: ${famous}`);
-      if(neighbors) hints.push(`Neighbor example: ${neighbors}`);
+      if(plate) hints.push(`Plaka: ${plate}`);
+      if(region) hints.push(`Bölge: ${region}`);
+      if(famous) hints.push(`Meşhur: ${famous}`);
+      if(neighbors) hints.push(`Komşu örneği: ${neighbors}`);
       if(hints.length>0) return hints[Math.floor(Math.random()*hints.length)];
     }
   }
   // fallback hints
   const generic = [
-    'This province is in Turkey.',
-    'It is a provincial center.',
-    'Known for local cuisine or landmarks.',
-    'One of the larger provinces by area/population.'
+    'Bu il Türkiye\'dedir.',
+    'Bu bir il merkezidir.',
+    'Yerel mutfağı veya ünlü yerleriyle tanınır.',
+    'Türkiye\'nin daha büyük illerinden biridir.'
   ];
   return generic[Math.floor(Math.random()*generic.length)];
 }
@@ -346,8 +346,8 @@ function onMapClick(e){
     const dist = haversineKm(latlng.lat, latlng.lng, tLat, tLon);
     // show clicked marker and target marker (clear previous markers first)
     if(markerLayer) markerLayer.clearLayers();
-    L.marker([latlng.lat, latlng.lng]).addTo(markerLayer).bindPopup(`You clicked — ${dist.toFixed(1)} km`).openPopup();
-    L.marker([tLat, tLon]).addTo(markerLayer).bindPopup(`${targetName} (target)`).openPopup();
+    L.marker([latlng.lat, latlng.lng]).addTo(markerLayer).bindPopup(`Tıklanan yer — ${dist.toFixed(1)} km`).openPopup();
+    L.marker([tLat, tLon]).addTo(markerLayer).bindPopup(`${targetName} (hedef)`).openPopup();
 
     // scoring tiers (closer = more points)
     let gained = 0;
@@ -358,13 +358,13 @@ function onMapClick(e){
     if(gained > 0){
       players[currentPlayerIndex].score = (players[currentPlayerIndex].score || 0) + gained;
       el('score').innerText = players[currentPlayerIndex].score;
-      evtLog(`✅ ${players[currentPlayerIndex].name} clicked ${dist.toFixed(1)}km — +${gained} pts (target: ${targetName})`);
+      evtLog(`✅ ${players[currentPlayerIndex].name} ${dist.toFixed(1)}km uzaklıktan tıkladı — +${gained} puan (hedef: ${targetName})`);
       setTimeout(()=> newQuestion(), 700);
     } else {
       // too far -> lose a life
       players[currentPlayerIndex].lives = (players[currentPlayerIndex].lives===undefined? (mode==='hard'?2:3) : players[currentPlayerIndex].lives) - 1;
       el('lives').innerText = players[currentPlayerIndex].lives;
-      evtLog(`❌ Too far (${dist.toFixed(1)} km) — lives left: ${players[currentPlayerIndex].lives}`);
+      evtLog(`❌ Çok uzak (${dist.toFixed(1)} km) — Kalan canlar: ${players[currentPlayerIndex].lives}`);
       if(players[currentPlayerIndex].lives <= 0) endTurnOrGame();
       else setTimeout(()=> newQuestion(), 700);
     }
@@ -386,8 +386,8 @@ function onMapClick(e){
 
   // show feedback markers
   if(markerLayer) markerLayer.clearLayers();
-  L.marker([latlng.lat, latlng.lng]).addTo(markerLayer).bindPopup(`You clicked — ${best.dist.toFixed(1)} km`).openPopup();
-  L.marker([best.lat, best.lon]).addTo(markerLayer).bindPopup(`${best.name} (nearest)`).openPopup();
+  L.marker([latlng.lat, latlng.lng]).addTo(markerLayer).bindPopup(`Tıklanan yer — ${best.dist.toFixed(1)} km`).openPopup();
+  L.marker([best.lat, best.lon]).addTo(markerLayer).bindPopup(`${best.name} (en yakın)`).openPopup();
 
   // threshold depends on difficulty
   const threshold = (mode==='hard'?25:40);
@@ -425,7 +425,7 @@ function processAnswer(foundName, viaPolygon=false, distKm=0){
     const gained = base + comboBonus + speedBonus + distBonus;
     players[currentPlayerIndex].score += gained;
     el('score').innerText = players[currentPlayerIndex].score;
-    evtLog(`✅ Correct: ${foundName} +${gained}pts (combo:${combo}, speed:${Math.round(elapsed)}s${distKm?`, dist:${distKm.toFixed(1)}km`:''})`);
+    evtLog(`✅ Doğru: ${foundName} +${gained}puan (combo:${combo}, hız:${Math.round(elapsed)}s${distKm?`, uzaklık:${distKm.toFixed(1)}km`:''})`);
     // show marker (use markerLayer so we can clear later)
     if(markerLayer) markerLayer.clearLayers();
     L.marker([latFromName(foundName), lonFromName(foundName)]).addTo(markerLayer || map).bindPopup(foundName).openPopup();
@@ -445,12 +445,12 @@ function processWrong(dist){
   players[currentPlayerIndex].lives -= penaltyLives;
   el('lives').innerText = players[currentPlayerIndex].lives;
   players[currentPlayerIndex].score = players[currentPlayerIndex].score || 0;
-  evtLog(`❌ Wrong answer. Lives left: ${players[currentPlayerIndex].lives}`);
+  evtLog(`❌ Yanlış cevap. Kalan canlar: ${players[currentPlayerIndex].lives}`);
   if(players[currentPlayerIndex].lives <= 0){
     endTurnOrGame();
   } else {
     // show correct province briefly if available
-    if(dist) evtLog(`Distance to nearest centroid: ${dist.toFixed(1)} km`);
+    if(dist) evtLog(`En yakın merkez noktasına uzaklık: ${dist.toFixed(1)} km`);
   }
 }
 
@@ -502,7 +502,7 @@ function setupPlayerTurn(idx){
   p.score = p.score || 0;
   p.time = 0;
   p.lives = (mode==='hard'?2:3);
-  el('turnTitle').innerText = `Turn: ${p.name}`;
+  el('turnTitle').innerText = `Sıra: ${p.name}`;
   el('score').innerText = p.score;
   el('lives').innerText = p.lives;
   el('events').innerHTML = '';
@@ -534,7 +534,7 @@ function endTurnOrGame(){
   if(timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   el('skipBtn').disabled = true;
   el('finishTurnBtn').disabled = true;
-  evtLog(`🛑 ${players[currentPlayerIndex].name} turn ended. Score: ${players[currentPlayerIndex].score}`);
+  evtLog(`🛑 ${players[currentPlayerIndex].name} sırası bitti. Skor: ${players[currentPlayerIndex].score}`);
   // advance if sequential multiplayer
   if(currentPlayerIndex < players.length-1){
     currentPlayerIndex++;
@@ -555,7 +555,7 @@ el('skipBtn').addEventListener('click', ()=>{
   p.lives = (p.lives === undefined ? (mode==='hard' ? 2 : 3) : p.lives) - 1;
   el('score').innerText = p.score;
   el('lives').innerText = p.lives;
-  evtLog(`⏭️ Skipped question (-2 score, -1 life).`);
+  evtLog(`⏭️ Soru atlandı (-2 skor, -1 can).`);
   if(p.lives <= 0){
     endTurnOrGame();
   } else {
@@ -573,11 +573,11 @@ function showMatchResult(){
   // compute winner or top score
   let best = players[0];
   for(const p of players) if(p.score > best.score) best = p;
-  const msg = players.length>1 ? `Winner: ${best.name} (${best.score})` : `Your score: ${best.score}`;
-  el('hintText').innerText = 'Game finished.';
+  const msg = players.length>1 ? `Kazanan: ${best.name} (${best.score})` : `Sizin skorunuz: ${best.score}`;
+  el('hintText').innerText = 'Oyun bitti.';
   el('resultText').innerText = msg;
   el('endActions').style.display = 'block';
-  evtLog(`🏁 Game finished. ${msg}`);
+  evtLog(`🏁 Oyun bitti. ${msg}`);
 
   // Also show a prominent overlay with winner name and score
   try{
@@ -585,8 +585,8 @@ function showMatchResult(){
     if(overlay){
       const title = document.getElementById('winnerTitle');
       const text = document.getElementById('winnerText');
-      title.innerText = players.length>1 ? 'Match Winner' : 'Result';
-      text.innerText = players.length>1 ? `${best.name} — ${best.score} pts` : `Your score: ${best.score} pts`;
+      title.innerText = players.length>1 ? 'Maç Kazananı' : 'Sonuç';
+      text.innerText = players.length>1 ? `${best.name} — ${best.score} puan` : `Sizin skorunuz: ${best.score} puan`;
       overlay.style.display = 'flex';
       // wire buttons
       document.getElementById('overlayRestartBtn').onclick = ()=> location.reload();
@@ -604,7 +604,7 @@ function loadLeaders(){
   return raw ? JSON.parse(raw) : [];
 }
 function saveLeader(name,score){
-  if(!name) return alert('Provide a name to save score.');
+  if(!name) return alert('Skoru kaydetmek için lütfen bir isim girin.');
   const arr = loadLeaders();
   arr.push({name,score,date:new Date().toISOString()});
   arr.sort((a,b)=>b.score-a.score);
