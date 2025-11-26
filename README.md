@@ -1,54 +1,113 @@
-# GeoKahoot (Turkey) — README
+# GeoKahoot 🗺️
 
-This small web game asks players to find Turkish provinces on a Leaflet map.
+Türkiye'nin 81 ilini harita üzerinde bularak oynamanız gereken eğlenceli bir coğrafya oyunu. Tek oynarken ya da arkadaşlarınızla rekabetçi bir şekilde oyun oynayabilirsiniz.
 
-Two game modes:
-- `Easy`: the hint shows the province plate number (e.g. `34` for İstanbul); the player clicks the map near the province. Points are awarded by distance.
-- `Hard`: the hint shows a short cultural / encyclopedic text about the province; the player must click near the right province. Cultural hints come from `data/cultural_questions.json` (see below).
+## 🎮 Oyun Modları
 
-Files you may want to know about
-- `index.html` — main page and UI.
-- `script.js` — game logic and map interactions.
-- `style.css` — basic styling.
-- `data/cultural_questions_sample.json` — small sample of cultural hints used as a fallback.
-- `scripts/fetch_cultural_questions.py` — helper that fetches Turkish Wikipedia summaries and builds `data/cultural_questions.json`.
+### 🟢 Kolay Mod (Easy)
+- **İpucu:** İl plaka numarası (örneğin 34 = İstanbul, 35 = İzmir)
+- **Görev:** Harita üzerinde tıklayarak doğru ili bulun
+- **Başlangıç Can:** 3 hayat
+- **Puanlama:**
+  - 0-20 km: **+20 puan** (mükemmel)
+  - 20-60 km: **+10 puan** (iyi)
+  - 60-150 km: **+5 puan** (orta)
+  - >150 km: **0 puan + can kaybı** (çok uzak)
 
-How to run locally (Windows PowerShell)
-1. (Optional) Populate full cultural question set from Turkish Wikipedia. From the project folder run:
+### 🔴 Zor Mod (Hard)
+- **İpucu:** İlin kültürel özellikleri, tarihi ve ünlü yerleri hakkında bilgi
+- **Örnek İpucu:** "Pamukkale travertenleri ve antik Hierapolis kenti ile dünya çapında tanınır." → Denizli
+- **Başlangıç Can:** 2 hayat
+- **Puanlama:** Doğru cevap + bonuslar
+  - ⚡ **Hız Bonusu:** 3 saniye içinde = +10 puan, 8 saniye içinde = +5 puan
+  - 🔥 **Combo Bonusu:** 3 ard arda doğru = +5 puan, 5 ard arda doğru = +20 puan
 
-```powershell
-python .\scripts\fetch_cultural_questions.py
-```
-
-This will create `data/cultural_questions.json` with Wikipedia summary text for each province. The script is polite (adds a short delay between requests). Internet access is required.
-
-2. Start a simple static server so `fetch()` and assets work correctly. From the project root run:
-
-```powershell
-python -m http.server 8000
-```
-
-3. Open the game in your browser:
+## 📁 Dosya Yapısı
 
 ```
-http://localhost:8000/
+kahoot/
+├── index.html          # Ana sayfa ve oyun arayüzü
+├── script.js           # Oyun mantığı ve harita etkileşimleri
+├── style.css           # Stil ve tasarım
+├── rules.html          # Detaylı oyun kuralları sayfası
+├── giriş.jpg           # Giriş sayfası arkaplanı
+├── mor.jpg             # Oyun sayfası arkaplanı
+└── README.md           # Bu dosya
 ```
 
-Usage notes
-- The app no longer depends on a GeoJSON file. It uses `plateCentroids` fallback coordinates when a GeoJSON isn't provided.
-- If `data/cultural_questions.json` exists, Hard mode will use that file. Otherwise the app falls back to `data/cultural_questions_sample.json`.
-- If you want to customize or extend the cultural hints, edit or replace `data/cultural_questions.json` (JSON object with province names as keys and short hint strings as values).
+## 🚀 Nasıl Oynanır
 
-Troubleshooting
-- If you see CORS or `fetch` errors while loading the questions, ensure you started the local static server and you opened the game via `http://localhost:8000` and not `file://`.
-- If the fetcher script fails, it will print per-province errors; you can re-run it later. The script uses the Turkish Wikipedia REST summary API and may be blocked if run too frequently.
+### Oyun Kurulumu
+1. **Oyuncu Sayısı:** 1-4 arasında oyuncu seçin
+2. **İsim Girin:** Her oyuncunun adını yazın
+3. **Mod Seçin:** Kolay veya Zor
+4. **Zaman Ayarlayın:** Her oyuncu için süre (varsayılan 60 saniye)
+5. **Başlayın:** "Oyunu Başlat" butonuna tıklayın
 
-Want me to do the fetch for you?
-- I cannot run network requests from here, but I prepared `scripts/fetch_cultural_questions.py` so you can run it locally with a single command above. If you want, I can tweak the script to fetch different lengths or to store the Wikipedia URL alongside each hint.
+### Oyun Sırası
+- İpucu ekranında gösterilen ipucunu okuyun
+- Harita üzerinde tıklayarak doğru ili seçin
+- Puanınız tıklama konumunun hedefe yakınlığına göre hesaplanır
+- **Skip:** Soruyu atlamak için -2 puan ve -1 can kaybedeceksiniz
+- **Finish Turn:** Sıranızı erken bitirebilirsiniz
 
-If you'd like, I can also:
-- Increase the number of sample hints in `data/cultural_questions_sample.json`.
-- Add UI text that credits the source (e.g., "Source: Wikipedia (tr)").
-- Make Hard mode require a smaller distance threshold (harder scoring).
+### Oyun Sonu
+- Tüm oyuncuların sırası bittikten sonra en yüksek skora sahip oyuncu kazanır
+- Final skorunuzu **Puan Tablosu**na kaydedebilirsiniz
+- Kayıtlı skorlar tarayıcı depolamasında saklanır
 
-Enjoy — tell me which next tweak you prefer.
+## 🛠️ Teknik Detaylar
+
+### Kültürel İpuçları
+- Tüm 81 il için kültürel ipuçları doğrudan `script.js` içine gömülüdür
+- Hiçbir dış kaynak veya API çağrısı gerekmez
+- **Avantaj:** Çevrimdışı da çalışır, hızlı yükler, CORS sorunları olmaz
+
+### Merkez Noktaları (Centroids)
+- Her ilin merkez koordinatları `plateCentroids` tablosunda saklanır
+- GeoJSON dosyasına ihtiyaç yoktur
+- Oyun GeoJSON olmadan tamamen çalışır
+
+### Puan Sistemi
+- Bir harita tıklama en yakın il merkezine göre değerlendirilir
+- Uzaklık Haversine formülü ile hesaplanır
+- Easy modda: mesafeye dayalı kademeli puanlama
+- Hard modda: combo ve hız bonusları uygulanır
+
+## 📖 Kuralları Öğrenin
+
+Detaylı oyun kuralları için oyun içinde **"Kurallar"** butonuna tıklayın veya `rules.html` dosyasını açın.
+
+## 🎯 Strateji İpuçları
+
+- **Türkiye Coğrafyasını Öğrenin:** Bölgelere göre iller nerelerde konumlanıyor
+- **Plaka Numaralarını Hatırlayın:** Kolay modda başlarsanız öğrenilir
+- **Kültürel Bilgi:** Zor modda ünlü yerleri (Pamukkale, Nemrut, Kapadokya vb.) bilin
+- **Hız vs Doğruluk:** Hızlı cevaplar bonus puan verir ama yanlış cevap can kaybettirir
+- **Can Yönetimi:** Riskli tahminlerden kaçının; can biterse sıra biter
+
+## 📝 Özellikler
+
+✅ Türkçe arayüz ve kurallar  
+✅ Tek ve çok oyuncu desteği  
+✅ İki zorluk modu (Kolay & Zor)  
+✅ İnteraktif harita (Leaflet + OpenStreetMap)  
+✅ Puan tablosu (tarayıcı depolaması)  
+✅ Responsive tasarım  
+✅ Tamamen istemci tarafında çalışır (sunucu gerekmez)  
+
+## 🌐 Tarayıcı Uyumluluğu
+
+Modern tarayıcılar uyumludur:
+- ✅ Google Chrome
+- ✅ Mozilla Firefox
+- ✅ Safari
+- ✅ Microsoft Edge
+
+## 📄 Hakkında
+
+Bu oyun Türkiye'nin coğrafyasını eğlenceli bir şekilde öğrenmek için geliştirilmiştir. Harita verileri **OpenStreetMap** ve **Leaflet.js** tarafından sağlanır.
+
+---
+
+**Eğlenceyle oynayın! 🎮🗺️**
