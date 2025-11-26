@@ -1,113 +1,115 @@
-# GeoKahoot 🗺️
+#GeoKahoot 🗺️
 
-Türkiye'nin 81 ilini harita üzerinde bularak oynamanız gereken eğlenceli bir coğrafya oyunu. Tek oynarken ya da arkadaşlarınızla rekabetçi bir şekilde oyun oynayabilirsiniz.
+A fun geography game where you must find all 81 provinces of Türkiye on a map. You can play solo or competitively with friends.
 
-## 🎮 Oyun Modları
+## 🎮 Game Modes
 
-### 🟢 Kolay Mod (Easy)
-- **İpucu:** İl plaka numarası (örneğin 34 = İstanbul, 35 = İzmir)
-- **Görev:** Harita üzerinde tıklayarak doğru ili bulun
-- **Başlangıç Can:** 3 hayat
-- **Puanlama:**
-  - 0-20 km: **+20 puan** (mükemmel)
-  - 20-60 km: **+10 puan** (iyi)
-  - 60-150 km: **+5 puan** (orta)
-  - >150 km: **0 puan + can kaybı** (çok uzak)
+### 🟢 Easy Mode
+- **Hint:** City license plate number (e.g., 34 = Istanbul, 35 = Izmir)
+- **Mission:** Find the correct city by clicking on the map.
+- **Starting Lives:** 3 lives
+- **Scoring:**
+- 0-20 km: **+20 points** (excellent)
+- 20-60 km: **+10 points** (good)
+- 60-150 km: **+5 points** (medium)
+- >150 km: **0 points + loss of life** (very far)
 
-### 🔴 Zor Mod (Hard)
-- **İpucu:** İlin kültürel özellikleri, tarihi ve ünlü yerleri hakkında bilgi
-- **Örnek İpucu:** "Pamukkale travertenleri ve antik Hierapolis kenti ile dünya çapında tanınır." → Denizli
-- **Başlangıç Can:** 2 hayat
-- **Puanlama:** Doğru cevap + bonuslar
-  - ⚡ **Hız Bonusu:** 3 saniye içinde = +10 puan, 8 saniye içinde = +5 puan
-  - 🔥 **Combo Bonusu:** 3 ard arda doğru = +5 puan, 5 ard arda doğru = +20 puan
+### 🔴 Hard Mode
+- **Hint:** Information about the city's cultural characteristics, history, and famous places.
+- **Sample Hint:** "Pamukkale is known worldwide for its travertines and the ancient city of Hierapolis." → Denizli
+- **Starting Lives:** 2 lives
+- **Scoring:** Correct answer + bonuses
+- ⚡ **Speed ​​Bonus:** Within 3 seconds = +10 points, within 8 seconds = +5 points
+- 🔥 **Combo Bonus:** 3 correct answers in a row = +5 points, 5 correct answers in a row = +20 points
 
-## 📁 Dosya Yapısı
+## 📁 File Structure
 
 ```
 kahoot/
-├── index.html          # Ana sayfa ve oyun arayüzü
-├── script.js           # Oyun mantığı ve harita etkileşimleri
-├── style.css           # Stil ve tasarım
-├── rules.html          # Detaylı oyun kuralları sayfası
-├── giriş.jpg           # Giriş sayfası arkaplanı
-├── mor.jpg             # Oyun sayfası arkaplanı
-└── README.md           # Bu dosya
+├── index.html # Homepage and game interface
+├── script.js # Game logic and map interactions
+├── style.css # Style and design
+├── rules.html # Detailed game rules page
+├── login.jpg # Homepage background
+├── mor.jpg # Game page background
+└── README.md # This file
 ```
 
-## 🚀 Nasıl Oynanır
+## 🚀 How to Play
 
-### Oyun Kurulumu
-1. **Oyuncu Sayısı:** 1-4 arasında oyuncu seçin
-2. **İsim Girin:** Her oyuncunun adını yazın
-3. **Mod Seçin:** Kolay veya Zor
-4. **Zaman Ayarlayın:** Her oyuncu için süre (varsayılan 60 saniye)
-5. **Başlayın:** "Oyunu Başlat" butonuna tıklayın
+### Game Setup
+1. **Number of Players:** Select 1-4 players
+2. **Enter Name:** Type the name of each player
+3. **Select Mode:** Easy or Hard
+4. **Set Time:** Time for each player (default 60 seconds)
+5. **Start:** Click the "Start Game" button
 
-### Oyun Sırası
-- İpucu ekranında gösterilen ipucunu okuyun
-- Harita üzerinde tıklayarak doğru ili seçin
-- Puanınız tıklama konumunun hedefe yakınlığına göre hesaplanır
-- **Skip:** Soruyu atlamak için -2 puan ve -1 can kaybedeceksiniz
-- **Finish Turn:** Sıranızı erken bitirebilirsiniz
+### Game Order
+- Read the hint displayed on the hint screen
+- Select the correct province by clicking on the map
+- Your score is calculated based on the proximity of the click location to the target
+- Skip:** You will lose -2 points and -1 life for skipping the question
+- Finish Turn:** You can end your turn early
 
-### Oyun Sonu
-- Tüm oyuncuların sırası bittikten sonra en yüksek skora sahip oyuncu kazanır
-- Final skorunuzu **Puan Tablosu**na kaydedebilirsiniz
-- Kayıtlı skorlar tarayıcı depolamasında saklanır
+### Game End
+- The player with the highest score after all players have finished their turns wins
+- Your final score is calculated by **Score You can save it to your table**
+- Saved scores are stored in browser storage.
 
-## 🛠️ Teknik Detaylar
+## 🛠️ Technical Details
 
-### Kültürel İpuçları
-- Tüm 81 il için kültürel ipuçları doğrudan `script.js` içine gömülüdür
-- Hiçbir dış kaynak veya API çağrısı gerekmez
-- **Avantaj:** Çevrimdışı da çalışır, hızlı yükler, CORS sorunları olmaz
+### Cultural Hints
+- Cultural hints for all 81 provinces are embedded directly in `script.js`
+- No external resources or API calls required
+- **Benefits:** Works offline, loads quickly, no CORS issues
 
-### Merkez Noktaları (Centroids)
-- Her ilin merkez koordinatları `plateCentroids` tablosunda saklanır
-- GeoJSON dosyasına ihtiyaç yoktur
-- Oyun GeoJSON olmadan tamamen çalışır
+### Centroids
+- The center coordinates of each province are stored in the `plateCentroids` table.
+- No GeoJSON file needed.
+- The game runs completely without GeoJSON.
 
-### Puan Sistemi
-- Bir harita tıklama en yakın il merkezine göre değerlendirilir
-- Uzaklık Haversine formülü ile hesaplanır
-- Easy modda: mesafeye dayalı kademeli puanlama
-- Hard modda: combo ve hız bonusları uygulanır
+### Point System
+- A map click is evaluated based on the nearest province center.
+- Distance is calculated using the Haversine formula.
+- In Easy mode: tiered scoring based on distance.
+- In Hard mode: combo and speed bonuses are applied.
 
-## 📖 Kuralları Öğrenin
+## 📖 Learn the Rules
 
-Detaylı oyun kuralları için oyun içinde **"Kurallar"** butonuna tıklayın veya `rules.html` dosyasını açın.
+For detailed game rules, click the **Rules** button in-game or open the `rules.html` file.
 
-## 🎯 Strateji İpuçları
+## 🎯 Strategy Tips
 
-- **Türkiye Coğrafyasını Öğrenin:** Bölgelere göre iller nerelerde konumlanıyor
-- **Plaka Numaralarını Hatırlayın:** Kolay modda başlarsanız öğrenilir
-- **Kültürel Bilgi:** Zor modda ünlü yerleri (Pamukkale, Nemrut, Kapadokya vb.) bilin
-- **Hız vs Doğruluk:** Hızlı cevaplar bonus puan verir ama yanlış cevap can kaybettirir
-- **Can Yönetimi:** Riskli tahminlerden kaçının; can biterse sıra biter
+- **Learn Turkey's Geography:** Where are the provinces located by region?
+- **Remember License Plate Numbers:** Learned if you start in Easy mode.
+- **Cultural Knowledge:** Identify famous places (Pamukkale, Nemrut, Cappadocia, etc.) in Hard mode.
+- **Speed ​​vs. Accuracy:** Quick answers give bonus points, but wrong answers cost lives.
+- **Life Management:** Avoid risky guesses; If you run out of lives, your turn ends.
 
-## 📝 Özellikler
+## 📝 Features
 
-✅ Türkçe arayüz ve kurallar  
-✅ Tek ve çok oyuncu desteği  
-✅ İki zorluk modu (Kolay & Zor)  
-✅ İnteraktif harita (Leaflet + OpenStreetMap)  
-✅ Puan tablosu (tarayıcı depolaması)  
-✅ Responsive tasarım  
-✅ Tamamen istemci tarafında çalışır (sunucu gerekmez)  
+✅ Turkish interface and rules
+✅ Single and multiplayer support
+✅ Two difficulty modes (Easy & Hard)
+✅ Interactive map (Leaflet + OpenStreetMap)
+✅ Scoreboard (browser storage)
+✅ Responsive design
+✅ Runs entirely client-side (no server required)
 
-## 🌐 Tarayıcı Uyumluluğu
+## 🌐 Browser Compatibility
 
-Modern tarayıcılar uyumludur:
+Modern browsers are compatible:
 - ✅ Google Chrome
 - ✅ Mozilla Firefox
 - ✅ Safari
 - ✅ Microsoft Edge
 
-## 📄 Hakkında
+## 📄 About
 
-Bu oyun Türkiye'nin coğrafyasını eğlenceli bir şekilde öğrenmek için geliştirilmiştir. Harita verileri **OpenStreetMap** ve **Leaflet.js** tarafından sağlanır.
+This game was developed to playfully learn the geography of Türkiye. Map data is provided by **OpenStreetMap** and **Leaflet.js**.
 
 ---
 
-**Eğlenceyle oynayın! 🎮🗺️**
+**Have fun playing! 🎮🗺️**
+
+
